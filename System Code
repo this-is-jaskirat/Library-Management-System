@@ -1,0 +1,788 @@
+Package 1: Book
+
+CLASS 1 :- book
+Code-------------------------------
+package Book;
+
+import java.util.Map;
+
+public interface book {
+	
+	public Boolean addBook(bookDetails BookDetails,Map<Long, bookDetails> bookMap);
+
+	public Boolean deleteBook(Long bookID,Map<Long, bookDetails> bookMap);
+
+	public bookDetails updateBook(bookDetails BookDetails,Map<Long, bookDetails> bookMap);
+	
+	public void displayAvailableBookInfo(Map<Long, bookDetails> bookMap);
+	
+	public void displayIssuedBookInfo(Map<Long, bookDetails> bookMap);
+}
+
+CLASS 2 :- bookDetails
+Code-------------------------------
+package Book;
+
+public class bookDetails {
+	private Long bookID;
+	private Boolean issued;
+	private String title;
+	private String author;
+	private String publisher;
+	private int totalPage;
+	private Long libraryID;
+	
+	public Long getBookID() {
+		return bookID;
+	}
+	public void setBookID(Long bookID) {
+		this.bookID = bookID;
+	}
+	public String getTitle() {
+		return title;
+	}
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	public String getAuthor() {
+		return author;
+	}
+	public void setAuthor(String author) {
+		this.author = author;
+	}
+	public String getPublisher() {
+		return publisher;
+	}
+	public void setPublisher(String publisher) {
+		this.publisher = publisher;
+	}
+	public int getTotalPage() {
+		return totalPage;
+	}
+	public void setTotalPage(int totalPage) {
+		this.totalPage = totalPage;
+	}
+	public Long getLibraryID() {
+		return libraryID;
+	}
+	public void setLibraryID(Long libraryID) {
+		this.libraryID = libraryID;
+	}
+	public Boolean getIssued() {
+		return issued;
+	}
+	public void setIssued(Boolean issued) {
+		this.issued = issued;
+	}	
+
+}
+
+CLASS 3 :- bookImplementation
+Code-------------------------------
+package Book;
+
+
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import Common.Constants;
+import Common.FormattedColumns;
+
+public class bookImplementation implements book{
+	
+
+	public Boolean addBook(bookDetails BookDetails,Map<Long, bookDetails> bookMap) {
+		
+		bookMap.put(BookDetails.getBookID(), BookDetails);
+		
+		return Boolean.TRUE.booleanValue();
+	}
+	
+	public Boolean deleteBook(Long bookID,Map<Long, bookDetails> bookMap) {
+		
+		Iterator<Entry<Long, bookDetails>> itr = bookMap
+		.entrySet().iterator();
+		
+		while (itr.hasNext()) {			
+			Entry<Long, bookDetails> entry = itr.next();
+			
+			if(bookID == entry.getKey()){
+				
+				if(entry.getValue().getIssued()){
+					System.out.println("You can not delete issued book!");
+					break;
+				}
+			
+				itr.remove();
+			
+				return Boolean.TRUE.booleanValue();
+			}			
+		}
+	
+		return Boolean.FALSE.booleanValue();
+	}
+
+
+	public bookDetails updateBook(bookDetails BookDetails, Map<Long, bookDetails> bookMap) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public void displayAvailableBookInfo(Map<Long, bookDetails> bookMap) {
+		
+		
+		Iterator<Entry<Long, bookDetails>> itr = bookMap
+				.entrySet().iterator();
+	
+		FormattedColumns formattedColumnsObj = new FormattedColumns();		
+		formattedColumnsObj.addLine(Constants.BOOKID,Constants.AUTHOR,Constants.TITLE);
+	
+		while (itr.hasNext()) {			
+			Entry<Long, bookDetails> entry = itr.next();
+			bookDetails BookDetails = entry.getValue();
+		
+			if(BookDetails!=null && !BookDetails.getIssued()){
+				formattedColumnsObj.addLine(entry.getKey().toString(),
+						BookDetails.getAuthor(), BookDetails.getTitle());
+			}			
+		}
+		
+		formattedColumnsObj.print();		
+	}
+
+
+	public void displayIssuedBookInfo(Map<Long, bookDetails> bookMap) {
+		
+		Iterator<Entry<Long, bookDetails>> itr = bookMap
+		.entrySet().iterator();
+		
+		FormattedColumns formattedColumnsObj = new FormattedColumns();		
+		formattedColumnsObj.addLine(Constants.BOOKID,Constants.AUTHOR,Constants.TITLE);
+		
+		while (itr.hasNext()) {			
+			Entry<Long, bookDetails> entry = itr.next();
+			bookDetails BookDetails = entry.getValue();
+			
+			if(BookDetails.getIssued()){				
+				formattedColumnsObj.addLine(entry.getKey().toString(),
+						BookDetails.getAuthor(), BookDetails.getTitle());
+			}			
+		}
+	
+		formattedColumnsObj.print();
+	}
+
+}
+
+Package 2: Library
+
+CLASS 1 :- library
+Code-------------------------------
+package Library;
+
+import java.util.Map;
+
+public interface library {
+	
+	public void addLibrary(libraryDetails LibraryDetails,Map<Long, libraryDetails> map);
+
+	public void searchlibrary(String Name,Map<Long, libraryDetails> map);
+	
+	public void updatelibrary(libraryDetails LibraryDetails,Map<Long, libraryDetails> map);
+	
+	public void displayLibraryInfo(Map<Long, libraryDetails> libraryMap);
+
+}
+
+
+CLASS 2 :- libraryDetails
+Code-------------------------------
+package Library;
+
+public class libraryDetails {
+	
+	private Long libraryID;
+
+	private String name;
+
+	private String address;
+	
+	private Boolean isActive;
+
+	private String ownerName;
+	
+	private Boolean isPublicLibrary;
+	
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getAddress() {
+		return address;
+	}
+	public void setAddress(String address) {
+		this.address = address;
+	}
+	public Boolean getIsActive() {
+		return isActive;
+	}
+	public void setIsActive(Boolean isActive) {
+		this.isActive = isActive;
+	}
+	public String getOwnerName() {
+		return ownerName;
+	}
+	public void setOwnerName(String ownerName) {
+		this.ownerName = ownerName;
+	}
+	public Boolean getIsPublicLibrary() {
+		return isPublicLibrary;
+	}
+	public void setIsPublicLibrary(Boolean isPublicLibrary) {
+		this.isPublicLibrary = isPublicLibrary;
+	}
+	public Long getLibraryID() {
+		return libraryID;
+	}
+	public void setLibraryID(Long libraryID) {
+		this.libraryID = libraryID;
+	}	
+}
+
+
+CLASS 3 :- libraryImplementations
+Code-------------------------------
+package Library;
+
+import java.util.Map;
+import java.util.Map.Entry;
+
+import Common.Constants;
+
+public class libraryImplementations implements library{
+
+	
+
+	public void displayLibraryInfo(Map<Long, libraryDetails> libraryMap) {
+		
+		java.util.Iterator<Entry<Long, libraryDetails>> itr = libraryMap.entrySet().iterator();
+		
+		StringBuilder stringBuilder = new StringBuilder();
+		stringBuilder.append("******* Library Information *******").append(Constants.LINECHANGE);
+		while(itr.hasNext()){
+			Entry<Long, libraryDetails> entry = itr.next();
+			libraryDetails LibraryDetails = entry.getValue();			
+			stringBuilder.append(entry.getKey()).append(Constants.TABSPACE).append(LibraryDetails.getName()).append(Constants.TABSPACE).append(LibraryDetails.getAddress()).append(Constants.LINECHANGE);
+		}
+		System.out.println(stringBuilder);
+	}
+
+	public void addLibrary(libraryDetails LibraryDetails,
+			Map<Long, libraryDetails> map) {
+		
+		map.put(LibraryDetails.getLibraryID(), LibraryDetails);
+		
+		//return Boolean.TRUE.booleanValue();
+		
+	}
+	
+	public void searchlibrary(String Name, Map<Long, libraryDetails> map) {
+		
+		
+	}
+	
+	
+	public void updatelibrary(libraryDetails LibraryDetails,
+			Map<Long, libraryDetails> map) {
+	
+		
+	}	
+
+}
+
+
+Package 3: Common
+
+CLASS 1 :- Constants
+Code-------------------------------
+package Common;
+
+
+
+public interface Constants {
+	
+	public String COMMA = ",";
+	
+	public String LINECHANGE = "\n";
+	
+	public String TABSPACE = "\t";
+	
+	public String BLANKSTRING="";
+	
+	public String SPACESTRING=" ";
+
+	public String BOOKID="BookID";
+	
+	public String AUTHOR = "Author";
+	
+	public String TITLE = "Title";
+	
+	public String LIBRARYID = "LibraryID";
+	
+	public String LibraryName = "Library Name";
+	
+	public String PUBLISHER = "Publisher";
+	
+
+}
+
+CLASS 2 :- FormattedColumns
+Code-------------------------------
+package Common;
+
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;  
+
+public class FormattedColumns {
+
+    List<List<String>> lines = new ArrayList<List<String>>();
+    List<Integer> maxLengths = new ArrayList<Integer>();
+    int numColumns = -1;
+
+    public FormattedColumns addLine(String... line) {
+
+        if (numColumns == -1){
+            numColumns = line.length;
+            for(int i = 0; i < numColumns; i++) {
+                maxLengths.add(0);
+            }
+        }
+
+        if (numColumns != line.length) {
+            throw new IllegalArgumentException();
+        }
+
+        for(int i = 0; i < numColumns; i++) {
+            maxLengths.set(  i, Math.max( maxLengths.get(i), line[i].length() )  );
+        }
+
+        lines.add( Arrays.asList(line) );
+
+        return this;
+    }
+
+    public void print(){
+        System.out.println( toString() );
+    }
+
+    public String toString(){
+        String result = Constants.BLANKSTRING;
+        for(List<String> line : lines) {
+            for(int i = 0; i < numColumns; i++) {
+                result += pad( line.get(i), maxLengths.get(i) + 1 );                
+            }
+            result += Constants.LINECHANGE;
+        }
+        return result;
+    }
+
+    private String pad(String word, int newLength){
+        while (word.length() < newLength) {
+            word += Constants.SPACESTRING;            
+        }       
+        return word;
+    }
+}
+
+Package 4: Main
+
+CLASS 1 :- main
+Code-------------------------------
+
+package Main;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.TreeMap;
+
+import Book.book;
+import Book.bookDetails;
+import Book.bookImplementation;
+import Common.Constants;
+import Common.FormattedColumns;
+import Library.library;
+import Library.libraryDetails;
+import Library.libraryImplementations;
+
+public class main {
+	
+	
+	static Map<Long, libraryDetails> libraryMap = new TreeMap<Long, libraryDetails>(); 
+	
+	static Map<Long, bookDetails> bookMap = new TreeMap<Long, bookDetails>();
+		
+	static Map<Long, Set> LibraryBookAssociation = new TreeMap<Long, Set>();
+	
+	//static Scanner scanner = new Scanner(System.in);
+	static InputStreamReader isr = new InputStreamReader(System.in);
+	static BufferedReader bufferedReader = new BufferedReader(isr);
+	
+	static library libraryObj = new libraryImplementations();
+
+	static book bookObj = new bookImplementation();
+	
+	static Long index = 0l;
+
+	public static void main(String[] args) throws IOException {
+		
+		System.out.println("********************************************");
+		System.out.println("  Welcome to CollegeLibrary  ");
+		System.out.println("********************************************");
+		System.out.println("--- Please select you obtion to take action --- ");
+		
+		mainMenu();		
+		
+		//Scanner scanner = new Scanner(System.in);
+		
+		Boolean isNotExit = true;
+		
+		while(isNotExit){
+			System.out.println("********* Please Enter your Option *********");
+			try{
+			Integer selectedOption = Integer.valueOf(bufferedReader.readLine());
+			
+			
+				action(selectedOption);
+			}catch (Exception e) {
+				System.out.println("Error Input : "+e.getMessage());	
+				continue;
+			}
+						
+		}	
+	}
+	private static void  stopApplication(){
+		System.exit(1);
+	}
+	
+	private static void action(Integer selectedOption) throws IOException{	
+
+		switch(selectedOption){	
+		case 0: 
+			System.out.println("****Library Details****"+Constants.LINECHANGE);
+			
+			iterateAndDispLibraryMap(libraryMap);
+			
+			mainMenu();
+			break;
+			
+		case 1: 
+			System.out.println("****Library and Book Association Details****"+Constants.LINECHANGE);
+			displayLibraryBookAss(LibraryBookAssociation);
+		
+			mainMenu();
+			break;
+		case 2:
+			System.out.println("****Display Existing Available Books****"+Constants.LINECHANGE);
+			displayAvailableBookInfo(bookMap);
+			break;
+		case 3:
+			System.out.println("****Display Existing Issued Books****"+Constants.LINECHANGE);
+			
+			displayIssuedBookInfo(bookMap);
+			mainMenu();
+			break;
+		case 4:
+			System.out.println("****Add New Libray****"+Constants.LINECHANGE);
+			addLibrary();
+			mainMenu();
+			break;
+		case 5:
+			System.out.println("****Add New Book****"+Constants.LINECHANGE);
+			addBook();
+			mainMenu();
+			break;
+		case 6:
+			System.out.println("****Issue a Book****"+Constants.LINECHANGE);
+			issueBook();
+			mainMenu();
+			break;
+		case 7:
+			System.out.println("****Delete a Book****"+Constants.LINECHANGE);
+			deleteBook(bookMap);
+			mainMenu();
+			break;
+		case 8:
+			System.out.println("Application Stopped");
+			stopApplication();
+			mainMenu();
+			break;
+		default:
+			System.out.println("Option Not Recognized!");
+			mainMenu();
+			break;
+		
+		}
+	}
+	private static void mainMenu() {
+	
+		FormattedColumns formattedColumnsObj = new FormattedColumns();
+
+		formattedColumnsObj
+				.addLine(
+						"********** MAIN MENU **********")
+				.addLine(
+						"Press '0' To Display Existing Libraries")
+				.addLine(
+						"Press '1' To Display Existing Libraries and Books Details")
+				.addLine("Press '2' To Display Existing Available Books")
+				.addLine("Press '3' To Display Existing Issues Books")
+				.addLine("Press '4' To Add New Libray")
+				.addLine("Press '5' To Add New Book")
+				.addLine("Press '6' Issue a Book")
+				.addLine("Press '7' Delete a Book")
+				.addLine("Press '8' To Stop Application");
+
+		formattedColumnsObj.print();
+		
+	}
+	
+	
+	private static Boolean addBook() throws IOException{
+		try{
+			//Scanner tempScanner = new Scanner(System.in);
+		
+			bookDetails BookDetails = new bookDetails();
+			BookDetails.setTotalPage((int) (Math.random()*100));
+			BookDetails.setBookID(++index);
+			BookDetails.setIssued(false);	
+				
+			System.out.println("Enter Book Title -");
+			BookDetails.setTitle(bufferedReader.readLine());
+			System.out.println("Enter Book Author -");
+			BookDetails.setAuthor(bufferedReader.readLine() );
+			System.out.println("Enter Associated LibraryID -");
+			BookDetails.setLibraryID(Long.valueOf(bufferedReader.readLine()));			
+			System.out.println("Enter Publisher -");
+			BookDetails.setPublisher(bufferedReader.readLine());
+			validateLibraryID(BookDetails);
+			
+			return bookObj.addBook(BookDetails,bookMap);
+		}catch(NumberFormatException nfe){
+			nfe.getMessage();
+			
+		}		
+		return Boolean.FALSE.booleanValue();
+		
+	}
+	
+
+	private static Boolean issueBook() throws IOException{
+		
+		if(bookMap.isEmpty()){
+			System.out.println("No Book Added Yet!");		
+			
+			return Boolean.FALSE.booleanValue();
+		}else{			
+			try{
+				displayAvailableBookInfo(bookMap);
+				System.out.println("Enter BookID from above to issue");
+				Long bookID = Long.valueOf(bufferedReader.readLine());
+				if(bookMap.containsKey(bookID)){					
+					
+					bookMap.get(bookID).setIssued(Boolean.TRUE.booleanValue());
+				}else{
+					System.out.println("BookID Not available!");
+				
+					return Boolean.TRUE.booleanValue();
+				}				
+			
+				return Boolean.TRUE.booleanValue();
+			}catch(NumberFormatException nfe){
+				nfe.getMessage();
+				
+			}
+		}		
+		return Boolean.FALSE.booleanValue();
+		
+	}
+	
+
+	private static Boolean deleteBook(Map<Long,bookDetails> bookMap) throws IOException{
+	
+		if(bookMap.isEmpty()){
+			System.out.println("No Book Added Yet!");		
+			
+			return Boolean.FALSE.booleanValue();
+		}else{			
+			try{
+				displayAvailableBookInfo(bookMap);
+				System.out.println("Enter BookID from above to delete");
+				Long bookID = Long.valueOf(bufferedReader.readLine());
+				if(bookMap.containsKey(bookID)){
+					bookObj.deleteBook(bookID, bookMap);
+				}else{
+					System.out.println("BookID Not available!");
+				
+					return Boolean.TRUE.booleanValue();
+				}			
+				
+				return Boolean.TRUE.booleanValue();
+			}catch(NumberFormatException nfe){
+				nfe.getMessage();
+				
+			}
+		}			
+		
+		return Boolean.FALSE.booleanValue();
+		
+	}
+private static Boolean addLibrary() throws IOException {
+		
+		//Scanner tempScanner = new Scanner(System.in);
+		
+		libraryDetails LibraryDetails = new libraryDetails();
+		LibraryDetails.setLibraryID(++index);
+		LibraryDetails.setIsActive(Boolean.TRUE.booleanValue());
+		LibraryDetails.setIsPublicLibrary(Boolean.TRUE.booleanValue());
+		libraryObj.addLibrary(LibraryDetails, libraryMap);
+		
+		
+		System.out.println("Enter Library Name -");
+		String name = bufferedReader.readLine();
+		LibraryDetails.setName(name);
+		System.out.println("Enter Library Address -");
+		String address = bufferedReader.readLine();
+		LibraryDetails.setAddress(address);
+		System.out.println("Enter Library Owner Name -");
+		String ownerName = bufferedReader.readLine();
+		LibraryDetails.setOwnerName(ownerName);
+		
+		return Boolean.TRUE.booleanValue();
+
+	}
+	
+	private static void displayLibraryBookAss(
+			Map<Long, Set> LibraryBookAssociation) {
+		
+		if(LibraryBookAssociation.isEmpty()){
+			System.out.println("No Book assigned to Library Yet!"+Constants.LINECHANGE);
+			
+			return;
+		}		
+	
+		Iterator<Entry<Long, Set>> itr = LibraryBookAssociation.entrySet()
+				.iterator();
+		
+		FormattedColumns formattedColumnsObj = new FormattedColumns();
+		formattedColumnsObj.addLine(Constants.LibraryName,Constants.TITLE,Constants.AUTHOR,Constants.PUBLISHER);
+		while (itr.hasNext()) {
+			Entry<Long, Set> entry = itr.next();
+			Long key = entry.getKey();			
+			Iterator itrSet = entry.getValue().iterator();
+			while (itrSet.hasNext()) {
+				Long bookID = (Long) itrSet.next();
+				if(bookMap.containsKey(bookID)){
+					bookDetails BookDetails = bookMap.get(bookID);
+					formattedColumnsObj.addLine(libraryMap.get(key).getName(),
+							BookDetails.getTitle(),BookDetails.getAuthor(),
+							BookDetails.getPublisher());				
+				}				
+			}
+		}
+		//Print output
+		formattedColumnsObj.print();		
+	}
+	
+	private static Boolean iterateAndDispLibraryMap(Map<Long, libraryDetails> libraryMap){
+		
+		if(libraryMap.isEmpty()){
+			System.out.println("No Library Added Yet!");
+			
+			return Boolean.FALSE.booleanValue();
+		}
+		
+		Iterator<Entry<Long, libraryDetails>> itr = libraryMap.entrySet()
+		.iterator();
+		FormattedColumns formattedColumnsObj = new FormattedColumns();		
+		formattedColumnsObj.addLine(Constants.LIBRARYID,Constants.LibraryName);
+		while (itr.hasNext()) {
+			Entry<Long, libraryDetails> entry = itr.next();
+			formattedColumnsObj.addLine(entry.getKey().toString(),entry.getValue().getName());			
+		}
+	
+		formattedColumnsObj.print();
+
+		return Boolean.TRUE.booleanValue();
+	}
+
+	
+	private static void validateLibraryID(bookDetails BookDetails) throws NumberFormatException, IOException{
+		
+		if(!libraryMap.containsKey(BookDetails.getLibraryID())){			
+			System.out.println("Entered Library ID not available, Added Default Value as 0!");
+		
+			if(iterateAndDispLibraryMap(libraryMap)){ 
+				
+				System.out.println("Enter Associated LibraryID -");
+				BookDetails.setLibraryID(Long.valueOf(bufferedReader.readLine()));
+				validateLibraryID(BookDetails);
+			}else{
+				
+				BookDetails.setLibraryID(0l);
+			}
+		}else{
+			Set bookIDSet = LibraryBookAssociation.get(BookDetails.getLibraryID());
+			if(bookIDSet == null){
+				bookIDSet = new HashSet();
+			}
+	
+			bookIDSet.add(BookDetails.getBookID());
+			
+			LibraryBookAssociation.put(BookDetails.getLibraryID(), bookIDSet);
+		}
+		
+	}
+	
+		
+	public static void displayAvailableBookInfo(Map<Long, bookDetails> bookMap) {
+
+		if(bookMap.isEmpty()){
+			System.out.println("No Book Added Yet!");		
+
+			return;
+		}else{
+			bookObj.displayAvailableBookInfo(bookMap);
+
+		}
+	}
+		
+	public static void displayIssuedBookInfo(Map<Long, bookDetails> bookMap) {
+	
+		if(bookMap.isEmpty()){
+			System.out.println("No Book Added Yet!");		
+
+			return;
+		}else{
+			bookObj.displayIssuedBookInfo(bookMap);
+
+		}
+	}
+
+}
+	
+
+
+
+
+
